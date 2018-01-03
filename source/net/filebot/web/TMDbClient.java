@@ -110,8 +110,14 @@ public class TMDbClient implements MovieIdentificationService, ArtworkProvider {
 			}
 
 			String[] alternativeTitles = getAlternativeTitles("movie/" + id, "titles", title, originalTitle, extendedInfo);
-
-			return new Movie(title, alternativeTitles, year, -1, id, locale);
+			MovieInfo info = null;
+			try {
+				info = getMovieInfo(String.valueOf(id), locale, true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			Movie movie = new Movie(title, alternativeTitles, year, -1, id, locale, info);
+			return movie;
 		}).filter(Objects::nonNull).collect(toList());
 	}
 

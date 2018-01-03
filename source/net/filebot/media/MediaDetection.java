@@ -603,10 +603,11 @@ public class MediaDetection {
 		names.add(getName(movieFile));
 
 		// 2. term: first meaningful parent folder
-		File movieFolder = guessMovieFolder(movieFile);
-		if (movieFolder != null) {
-			names.add(getName(movieFolder));
-		}
+		//All folders are meaningless usually hmmmm except multipart things usaually hmmm
+//		File movieFolder = guessMovieFolder(movieFile);
+//		if (movieFolder != null) {
+//			names.add(getName(movieFolder));
+//		}
 
 		// reduce movie names
 		Set<String> terms = reduceMovieNamePermutations(names);
@@ -972,7 +973,7 @@ public class MediaDetection {
 		Function<String, String> normalize = (s) -> normalizePunctuation(s).toLowerCase();
 		addUniqueQuerySet(exactMatches, normalize, Function.identity(), unique);
 
-		// remove blacklisted terms and remove duplicates
+		// remove blacklisted terms and remove duplicates, not sure what to do here, where is it filtering blacklisted terms?
 		List<String> extra = stream(guessMatches).flatMap(Collection::stream).filter(t -> {
 			return !unique.containsKey(normalize.apply(t));
 		}).collect(toList());

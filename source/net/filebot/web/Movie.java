@@ -10,6 +10,7 @@ public class Movie extends SearchResult {
 	protected int year;
 	protected int imdbId;
 	protected int tmdbId;
+	protected MovieInfo info;
 
 	// optional movie name language hint
 	protected String language;
@@ -30,12 +31,18 @@ public class Movie extends SearchResult {
 		this(name, null, year, imdbId, 0, null);
 	}
 
-	public Movie(String name, String[] aliasNames, int year, int imdbId, int tmdbId, Locale locale) {
+	public Movie(String name, String[] aliasNames, int year, int imdbId, int tmdbId, Locale locale, MovieInfo info) {
 		super(tmdbId > 0 ? tmdbId : imdbId > 0 ? imdbId : 0, name, aliasNames);
 		this.year = year;
 		this.imdbId = imdbId;
 		this.tmdbId = tmdbId;
 		this.language = locale == null ? null : locale.getLanguage();
+		this.info = info;
+	}
+
+
+	public Movie(String name, String[] aliasNames, int year, int imdbId, int tmdbId, Locale locale) {
+		this(name, aliasNames, year, imdbId, tmdbId, locale, null);
 	}
 
 	public int getYear() {
@@ -108,4 +115,7 @@ public class Movie extends SearchResult {
 		return String.format("%s (%04d)", name, year < 0 ? 0 : year);
 	}
 
+	public MovieInfo getInfo() {
+		return info;
+	}
 }

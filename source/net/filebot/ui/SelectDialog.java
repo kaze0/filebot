@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.io.File;
 import java.util.Collection;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import javax.swing.Action;
@@ -26,6 +27,9 @@ import javax.swing.SwingUtilities;
 
 import net.filebot.ResourceManager;
 import net.filebot.util.ui.DefaultFancyListCellRenderer;
+import net.filebot.web.Movie;
+import net.filebot.web.MovieInfo;
+import net.filebot.web.Person;
 import net.filebot.web.SearchResult;
 import net.miginfocom.swing.MigLayout;
 
@@ -115,6 +119,26 @@ public class SelectDialog<T> extends JDialog {
 		StringBuilder html = new StringBuilder(64);
 		html.append("<html><b>").append(escapeHTML(item.toString())).append("</b><br>");
 		String[] names = item.getAliasNames();
+		if (item instanceof Movie) {
+			Movie movie = (Movie) item;
+			if (movie.getInfo() != null) {
+				//FIXME: how to limit length? break at character length?
+				html.append("<br>" + movie.getInfo().getTagline() + "<br>");
+				html.append("<br>" + movie.getInfo().getOverview() + "<br>");
+
+				List<Person> cast = movie.getInfo().getCast();
+				if (cast != null) {
+					for (int i = 0, c = Math.min(cast.size(), 4); i < c; i++) {
+						html.append(cast.get(i) + "<br>");
+					}
+				}
+
+				//FIXME: how to appropriately size?
+				//html.append("<br><img src=\"" + movie.getInfo().get(MovieInfo.Property.poster_path) + "\"  style=\"border: 1px solid #000; max-width:64px; max-height:64px;\"> <br>");
+				html.append("<br><img src=\"" + movie.getInfo().get(MovieInfo.Property.poster_path) + "\" height=\"200\" width=\"150\"> <br>");
+			}
+		}
+
 		if (names.length > 0) {
 			html.append("<br>AKA:<br>");
 			for (String n : names) {
